@@ -18,9 +18,8 @@ jobs:
         with:
           java-version: '17'
 
-      - name: Change app location and Build with Gradle
+      - name: Build with Gradle
         run: |
-          cd ${{ github.workspace }}/store-backend
           echo $(pwd)
           chmod +x gradlew
           ./gradlew clean build -x test --no-daemon
@@ -28,7 +27,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: java-app
-          path: '${{ github.workspace }}/store-backend/build/libs/*.jar'
+          path: '${{ github.workspace }}/build/libs/*.jar'
 
   deploy:
     runs-on: ubuntu-latest
@@ -49,5 +48,5 @@ jobs:
         with:
           app-name: 'storejzg-spring-boot'
           slot-name: 'Production'
-          package: 'store-backend-0.0.1-SNAPSHOT.jar'
+          package: '*.jar'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_80515BAC0E7C4D48BB548F15CB48899D }}
