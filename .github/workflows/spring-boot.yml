@@ -1,4 +1,7 @@
-name: Build and deploy JAR app to Azure Web App - storejzg-spring-boot
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy WAR app to Azure Web App - storejzg-spring-boot
 
 on:
   push:
@@ -8,7 +11,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -18,19 +21,17 @@ jobs:
         with:
           java-version: '17'
 
-      - name: Build with Gradle
-        run: |
-          echo $(pwd)
-          chmod +x gradlew
-          ./gradlew clean build -x test --no-daemon
+      - name: Build with Maven
+        run: mvn clean install
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: java-app
-          path: '${{ github.workspace }}/build/libs/*.jar'
+          path: '${{ github.workspace }}/target/*.war'
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: build
     environment:
       name: 'Production'
@@ -48,5 +49,5 @@ jobs:
         with:
           app-name: 'storejzg-spring-boot'
           slot-name: 'Production'
-          package: 'store-backend-0.0.1-SNAPSHOT.jar'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_80515BAC0E7C4D48BB548F15CB48899D }}
+          package: '*.war'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FF8DE37489B145C5843474003D9B28E6 }}
