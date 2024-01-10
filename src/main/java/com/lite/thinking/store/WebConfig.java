@@ -13,7 +13,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/api/**")
                 .allowedOrigins("https://brave-pebble-036ac0d10.4.azurestaticapps.net")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
-                .allowCredentials(true);
+                .allowedHeaders("*");
     }
     
     @Bean
